@@ -3,9 +3,9 @@ import { ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-d
 
 window.publishNews = async function () {
 
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
-    const image = document.getElementById("image").value;
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const image = document.getElementById("image").value.trim();
     const category = document.getElementById("category").value;
 
     if (!title || !description) {
@@ -13,14 +13,17 @@ window.publishNews = async function () {
         return;
     }
 
+    // यदि image खाली है तो default image
+    const imageUrl = image !== "" ? image : "https://via.placeholder.com/600x350?text=UPHeadline";
+
     try {
 
         await push(ref(db, "news"), {
-            title,
-            description,
-            image: image || "https://picsum.photos/600/400",
-            category,
-            date: new Date().toLocaleString()
+            title: title,
+            description: description,
+            image: imageUrl,
+            category: category,
+            date: Date.now()
         });
 
         alert("✅ News Published Successfully");
@@ -28,10 +31,11 @@ window.publishNews = async function () {
         document.getElementById("title").value = "";
         document.getElementById("description").value = "";
         document.getElementById("image").value = "";
+        document.getElementById("category").selectedIndex = 0;
 
     } catch (err) {
         console.error(err);
-        alert(err.message);
+        alert("Error : " + err.message);
     }
 
 };
