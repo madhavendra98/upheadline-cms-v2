@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 window.publishNews = async function () {
 
@@ -15,7 +15,7 @@ window.publishNews = async function () {
 
     try {
 
-        await addDoc(collection(db, "news"), {
+        await push(ref(db, "news"), {
             title,
             description,
             image: image || "https://picsum.photos/600/400",
@@ -30,9 +30,7 @@ window.publishNews = async function () {
         document.getElementById("image").value = "";
 
     } catch (error) {
-
         alert(error.message);
-
     }
 
 }
