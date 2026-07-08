@@ -1,50 +1,37 @@
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 import { db } from "./firebase-config.js";
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const newsContainer = document.getElementById("newsContainer");
 
-const newsQuery = query(
-  collection(db, "news"),
-  orderBy("date", "desc")
-);
+const newsRef = ref(db, "news");
 
-onSnapshot(newsQuery, (snapshot) => {
+onValue(newsRef, (snapshot) => {
 
-  newsContainer.innerHTML = "";
+    newsContainer.innerHTML = "";
 
-  if (snapshot.empty) {
-    newsContainer.innerHTML = `
-      <h2 style="text-align:center;">
-        अभी कोई समाचार उपलब्ध नहीं है।
-      </h2>
-    `;
-    return;
-  }
+    if (!snapshot.exists()) {
+        newsContainer.innerHTML = `
+            <h2 style="text-align:center;">
+                अभी कोई समाचार उपलब्ध नहीं है।
+            </h2>
+        `;
+        return;
+    }
 
-  snapshot.forEach((doc) => {
+    const data = snapshot.val();
 
-    const news = doc.data();
+    Object.keys(data).reverse().forEach((key) => {
 
-    newsContainer.innerHTML += `
+        const news = data[key];
 
-      <div class="news-card">
-
-        <img src="${news.image || 'https://via.placeholder.com/400x250'}">
-
-        <h3>${news.title}</h3>
-
-        <p>${news.description || ""}</p>
-
-      </div>
-
-    `;
-
-  });
+        newsContainer.innerHTML += `
+            <div class="news-card">
+                <img src="${news.image || "https://picsum.photos/400/250"}" alt="News Image">
+                <h3>${news.title}</h3>
+                <p>${news.description}</p>
+                <small>${news.category}</small>
+            </div>
+        `;
+    });
 
 });
