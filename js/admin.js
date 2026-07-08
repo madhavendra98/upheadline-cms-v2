@@ -20,7 +20,7 @@ window.publishNews = async function () {
             description,
             image: image || "https://picsum.photos/600/400",
             category,
-            date: new Date().toISOString()
+            date: new Date().toLocaleString()
         });
 
         alert("✅ News Published Successfully");
@@ -29,8 +29,9 @@ window.publishNews = async function () {
         document.getElementById("description").value = "";
         document.getElementById("image").value = "";
 
-    } catch (error) {
-        alert(error.message);
+    } catch (err) {
+        console.error(err);
+        alert(err.message);
     }
 
-}
+};
