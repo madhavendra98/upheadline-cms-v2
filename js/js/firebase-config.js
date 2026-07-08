@@ -1,50 +1,18 @@
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-import { db } from "./firebase-config.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyC0DUG3ABj31yaMLZxE2gYTseEYOgQ4_4U",
+  authDomain: "upheadlinenews-89d83.firebaseapp.com",
+  databaseURL: "https://upheadlinenews-89d83-default-rtdb.firebaseio.com",
+  projectId: "upheadlinenews-89d83",
+  storageBucket: "upheadlinenews-89d83.firebasestorage.app",
+  messagingSenderId: "366107139152",
+  appId: "1:366107139152:web:e8d67c7da7c85116610555"
+};
 
-const newsContainer = document.getElementById("newsContainer");
+const app = initializeApp(firebaseConfig);
 
-const newsQuery = query(
-  collection(db, "news"),
-  orderBy("date", "desc")
-);
+const db = getDatabase(app);
 
-onSnapshot(newsQuery, (snapshot) => {
-
-  newsContainer.innerHTML = "";
-
-  if (snapshot.empty) {
-    newsContainer.innerHTML = `
-      <h2 style="text-align:center;">
-        अभी कोई समाचार उपलब्ध नहीं है।
-      </h2>
-    `;
-    return;
-  }
-
-  snapshot.forEach((doc) => {
-
-    const news = doc.data();
-
-    newsContainer.innerHTML += `
-
-      <div class="news-card">
-
-        <img src="${news.image || 'https://via.placeholder.com/400x250'}">
-
-        <h3>${news.title}</h3>
-
-        <p>${news.description || ""}</p>
-
-      </div>
-
-    `;
-
-  });
-
-});
+export { db };
