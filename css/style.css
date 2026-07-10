@@ -134,3 +134,19 @@ nav a{
 }
 
 }
+.news-card{
+    background:#fff;
+    padding:15px;
+    margin:15px 0;
+    border-radius:8px;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.news-card button{
+    background:red;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    cursor:pointer;
+    border-radius:5px;
+}
