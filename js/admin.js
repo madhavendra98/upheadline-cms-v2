@@ -1,6 +1,14 @@
 import { db } from "./firebase-config.js";
-import { ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+import {
+  ref,
+  push,
+  onValue,
+  remove,
+  update
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// Publish News
 window.publishNews = async function () {
 
     const title = document.getElementById("title").value.trim();
@@ -8,7 +16,7 @@ window.publishNews = async function () {
     const image = document.getElementById("image").value.trim();
     const category = document.getElementById("category").value;
 
-    if (title === "" || description === "") {
+    if (!title || !description) {
         alert("Title और Description भरें");
         return;
     }
@@ -17,10 +25,10 @@ window.publishNews = async function () {
 
         await push(ref(db, "news"), {
 
-            title: title,
-            description: description,
-            image: image,
-            category: category,
+            title,
+            description,
+            image,
+            category,
             date: Date.now()
 
         });
@@ -34,41 +42,96 @@ window.publishNews = async function () {
 
     } catch (error) {
 
-        console.error(error);
         alert(error.message);
 
     }
 
 };
-import { ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// Show News List
 
 const newsList = document.getElementById("newsList");
 
 onValue(ref(db, "news"), (snapshot) => {
+
+    if (!newsList) return;
+
     newsList.innerHTML = "";
 
-    if (!snapshot.exists()) return;
+    if (!snapshot.exists()) {
+
+        newsList.innerHTML = "<h3>No News Available</h3>";
+
+        return;
+
+    }
 
     const data = snapshot.val();
 
     Object.entries(data).reverse().forEach(([id, news]) => {
 
         newsList.innerHTML += `
+
         <div class="news-card">
+
+            <img src="${news.image || 'https://picsum.photos/400/250'}">
+
             <h3>${news.title}</h3>
+
             <p>${news.description}</p>
 
-            <button onclick="deleteNews('${id}')">🗑 Delete</button>
+            <small>${news.category}</small>
+
+            <br><br>
+
+            <button onclick="editNews('${id}')">
+                ✏️ Edit
+            </button>
+
+            <button onclick="deleteNews('${id}')">
+                🗑 Delete
+            </button>
+
         </div>
+
         `;
+
     });
+
 });
 
-window.deleteNews = async function(id) {
+// Delete News
 
-    if (!confirm("क्या आप यह News हटाना चाहते हैं?")) return;
+window.deleteNews = async function(id){
 
-    await remove(ref(db, "news/" + id));
+    if(!confirm("क्या आप यह News Delete करना चाहते हैं?"))
+        return;
 
-    alert("News Deleted");
-}
+    await remove(ref(db,"news/"+id));
+
+    alert("✅ News Deleted");
+
+};
+
+// Edit News
+
+window.editNews = async function(id){
+
+    const title = prompt("New Title");
+
+    if(title==null) return;
+
+    const description = prompt("New Description");
+
+    if(description==null) return;
+
+    await update(ref(db,"news/"+id),{
+
+        title,
+        description
+
+    });
+
+    alert("✅ News Updated");
+
+};
