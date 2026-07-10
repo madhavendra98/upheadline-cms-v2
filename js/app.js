@@ -1,5 +1,16 @@
 import { db } from "./firebase-config.js";
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { db } from "./firebase-config.js";
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+console.log("APP JS LOADED");
+
+const newsContainer = document.getElementById("newsContainer");
+
+const newsRef = ref(db, "news");
+
+onValue(newsRef, (snapshot) => {
+    console.log(snapshot.val());
 
 const newsContainer = document.getElementById("newsContainer");
 
