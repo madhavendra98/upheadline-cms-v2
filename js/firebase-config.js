@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 const firebaseConfig = {
   apiKey: "AIzaSyC0DUG3ABj31yaMLZxE2gYTseEYOgQ4_4U",
   authDomain: "upheadlinenews-89d83.firebaseapp.com",
@@ -18,4 +18,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-export { db, auth };
+const storage = getStorage(app);
+
+export { db, auth, storage };
