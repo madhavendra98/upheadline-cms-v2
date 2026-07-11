@@ -76,3 +76,31 @@ document.getElementById("sliderImage").src=slides[current].image;
 document.getElementById("sliderTitle").innerText=slides[current].title;
 
 },3000);
+function displayNews(newsArray){
+
+    newsContainer.innerHTML = "";
+
+    newsArray.forEach(([key, news])=>{
+
+        newsContainer.innerHTML += `
+        <div class="news-card" onclick="window.location='news.html?id=${key}'">
+
+            <img src="${news.image || 'https://picsum.photos/600/350'}"
+                 onerror="this.src='https://picsum.photos/600/350'">
+
+            <div style="padding:15px">
+
+                <small style="color:red">${news.category}</small>
+
+                <h2>${news.title}</h2>
+
+                <p>${news.description}</p>
+
+            </div>
+
+        </div>
+        `;
+
+    });
+
+}
